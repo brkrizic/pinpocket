@@ -4,7 +4,7 @@ import { serialize } from "cookie";
 
 
 export async function DELETE(){
-    const res = NextResponse.json({ success: true, message: "Logged out" }, { status: status.successful.accepted});
+    const res = NextResponse.json({ success: true, message: "Logged out" }, { status: status.successful.ok});
     res.headers.append(
         'Set-Cookie',
         serialize(TOKEN_NAME, '', {

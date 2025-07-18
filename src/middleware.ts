@@ -6,6 +6,16 @@ import { status } from "./types/types";
 export function middleware(request: NextRequest) {
     console.log('Middleware running for:', request.nextUrl.pathname);
 
+    const token = getTokenFromHeader(request);
+
+    if (request.nextUrl.pathname === "/") {
+    if (token) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    } else {
+      return NextResponse.redirect(new URL("/landing", request.url));
+    }
+  }
+
     const authResult = authMiddleware(request);
     if (authResult) return authResult;
 
@@ -32,5 +42,5 @@ function authMiddleware(request: NextRequest){
 }
 
 export const config = {
-  matcher: ['/api/bookmarks/:path*', '/api/categories/:path*'],  // Middleware applies only to these routes
+  matcher: ['/', '/api/bookmarks/:path*', '/api/categories/:path*'],  // Middleware applies only to these routes
 };

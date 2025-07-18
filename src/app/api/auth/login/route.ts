@@ -25,7 +25,7 @@ export async function POST(request: NextRequest){
 
 
         const token = generateToken(user.id);
-        const res = NextResponse.json({ success: true, message: "Logged in", user}, {status: status.successful.accepted});
+        const res = NextResponse.json({ success: true, message: "Logged in", user}, {status: status.successful.ok});
         res.headers.append('Set-Cookie', createCookie(token))
 
         return res;
