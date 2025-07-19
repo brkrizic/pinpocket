@@ -20,21 +20,21 @@ export default function ModalWrapper(){
         setIsLogin(false);
     };
 
-    const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onChangeUsername = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setUsername(value);
         console.log(username);
-    };
-    const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    }, [username]);
+    const onChangeEmail = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setEmail(value);
         console.log(value);
-    };
-    const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    }, [email]);
+    const onChangePassword = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setPassword(value);
         console.log(password);
-    }
+    }, [password])
 
     const onLogin = useCallback(async () => {
         const response = await fetch('/api/auth/login', {

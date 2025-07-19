@@ -16,17 +16,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-gray-50 text-gray-800">
 
 
         {/* Main content */}
-        <main>{children}</main>
+        <main className="min-h-screen">{children}</main>
+          {/* Global footer */}
+          <Footer/>
         
-        {/* React Portals */}
-        <div id="modal-root"></div>
-
-        {/* Global footer */}
-        <Footer/>
+          {/* React Portals */}
+          <div id="modal-root"></div>
       </body>
     </html>
   );

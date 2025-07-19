@@ -42,5 +42,5 @@ function authMiddleware(request: NextRequest){
 }
 
 export const config = {
-  matcher: ['/', '/api/bookmarks/:path*', '/api/categories/:path*'],  // Middleware applies only to these routes
+  matcher: ['/', '/dashboard', '/api/bookmarks/:path*', '/api/categories/:path*'],  // Middleware applies only to these routes
 };

@@ -65,3 +65,9 @@ export type Category = {
   userId: any;
   createdAt: Date;
 }
+
+export type Group = {
+  name: string;
+  userId: any[];
+  createdAt: Date;
+}
