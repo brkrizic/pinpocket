@@ -1,13 +1,13 @@
-"use client";
 
-import ModalWrapper from "./ModalWrapper";
+import Link from "next/link";
 
-export default function Header() {
+export default function LandingHeader() {
     return (
         <header className="flex justify-between items-center p-4 border-b bg-white shadow">
             <h1 className="text-xl font-bold text-black">PinPocket</h1>
             <nav className="space-x-4">
-                <ModalWrapper/>
+                <Link href="/login">Login</Link>
+                <Link href="/register">Register</Link>
             </nav>
         </header>
     );

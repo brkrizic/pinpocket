@@ -15,11 +15,10 @@ export default function DashboardPage() {
     return (
         //<div className="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
         <>
-
-            <main>
-                <h2 className="text-3xl font-bold mb-6 border-b pb-2">Welcome to Your Dashboard</h2>
-            </main>
-            </>
+        <main>
+            <h2 className="text-3xl font-bold mb-6 border-b pb-2">Welcome to Your Dashboard</h2>
+        </main>
+        </>
         //</div>
     );
 }

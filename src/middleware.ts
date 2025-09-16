@@ -1,46 +1,28 @@
-import { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { getTokenFromHeader, verifyToken } from "./utils/tokenHelper";
-import { status } from "./types/types";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import { decrypt } from "./lib/session";
 
-export function middleware(request: NextRequest) {
-    console.log('Middleware running for:', request.nextUrl.pathname);
 
-    const token = getTokenFromHeader(request);
+const protectedRoutes = ["/dashboard"];
+const publicRoutes = ["/login"];
 
-    if (request.nextUrl.pathname === "/") {
-    if (token) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    } else {
-      return NextResponse.redirect(new URL("/landing", request.url));
-    }
+export default async function middleware(req: NextRequest) {
+  const path = req.nextUrl.pathname;
+  const isProtectedRoute = protectedRoutes.includes(path);
+  const isPublicRoute = publicRoutes.includes(path);
+
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+
+  console.log(session);
+
+  if (isProtectedRoute && !session?.userId) {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-    const authResult = authMiddleware(request);
-    if (authResult) return authResult;
+  if (isPublicRoute && session?.userId) {
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+  }
 
-    return NextResponse.next();
+  return NextResponse.next();
 }
-
-function authMiddleware(request: NextRequest){
-    const token = getTokenFromHeader(request);
-    //TODO: Should verfiy token
-    const path = request.nextUrl.pathname;
-
-    if(!token){
-      return NextResponse.json({message: "Token is missing"}, {status: status.clientError.unauthorized})
-    }
-
-    if (path.startsWith('/api/bookmarks') && !token) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: status.clientError.unauthorized });
-    }
-    if (path.startsWith('/api/categories') && !token) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: status.clientError.unauthorized });
-    }
-
-    return null;
-}
-
-export const config = {
-  matcher: ['/', '/dashboard', '/api/bookmarks/:path*', '/api/categories/:path*'],  // Middleware applies only to these routes
-};
