@@ -1,46 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { login } from "./actions";
-import { Router } from "next/router";
-import { redirect, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BASE_URL } from "@/components/constants/constants";
+import { useLoginApi } from "@/hook/useLoginApi";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const { login, loading, error, success } = useLoginApi();
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-        const res = await fetch(`${BASE_URL}/api/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-          credentials: "include",
-        });
-        console.log(res);
-        router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
+    await login({email, password});
   };
+
+  useEffect(() => {
+    if(success){
+      router.push("/dashboard");
+    }
+  }, [success]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -70,8 +53,6 @@ export default function LoginForm() {
             />
           </div>
 
-          {error && <p className="text-red-500">{error}</p>}
-
           <button
             type="submit"
             disabled={loading}
@@ -79,6 +60,9 @@ export default function LoginForm() {
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
+          
+          {error && <p className="text-red-500">{error}</p>}
+          {success && <p className="text-green-500">Login successful!</p>}
         </form>
         <div className="mt-6 text-center">
           <Link href="/" className="text-sm font-medium text-blue-600 hover:underline">← Back to Home</Link>
