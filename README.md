@@ -1,3 +1,20 @@
+# 🔐 Next.js Authentication with Redis + JWT
+
+A authentication system using **Next.js App Router**, **Redis**, and **JWT**.  
+This project combines **server-managed sessions** and **stateless JWTs** for a secure, scalable hybrid setup.
+
+---
+
+## 🚀 Features
+
+- ✅ **JWT Authentication** – Protects Next.js page routes via middleware.  
+- 🔒 **Redis Sessions** – Stores `sessionId → userId` mappings for API route protection.  
+- ⚡ **Hybrid Auth Model** – Combines frontend JWTs and backend Redis sessions.  
+- 🍪 **Secure Cookies** – `httpOnly`, `secure`, and `SameSite` options enabled.  
+- ⏱️ **Auto Expiration** – Sessions auto-expire in Redis (7 days).  
+- 🔁 **Logout Mechanism** – Clears JWT + removes Redis session.
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
