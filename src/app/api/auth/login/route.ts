@@ -3,7 +3,8 @@ import { status } from "@/types/types";
 import bcrypt from "bcryptjs";
 import connect from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { createSession } from "@/lib/session";
+import { createSession } from "@/lib/session-jwt";
+import { checkSessionId, createRedisSession, getRedisSessionUser } from "@/lib/session-redis";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,6 +25,9 @@ export async function POST(request: NextRequest) {
     }
 
     await createSession(user.id);
+    await createRedisSession(user.id);
+
+    await checkSessionId();
 
     return NextResponse.json({ success: true, message: "Logged in", user }, { status: status.successful.ok });
 

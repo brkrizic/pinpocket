@@ -2,21 +2,21 @@ import { Bookmark, status, TOKEN_NAME } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 import BookmarkModel from "@/models/Bookmark";
 import connect from "@/lib/db";
-import { getTokenFromHeader, getUserId } from "@/utils/tokenHelper";
+import { cookies } from "next/headers";
+import { decrypt } from "@/lib/session-jwt";
 
 export async function POST(request: NextRequest) {
   try {
     await connect();
 
-    const bookmark: Bookmark = await request.json();
-    const userId = await getUserId(request);
+    const sessionToken = (await cookies()).get("session")?.value;
+    const session = await decrypt(sessionToken);
 
-    if(!userId){
-        return NextResponse.json(
-          { message: "Unauthorized: Invalid token" },
-          { status: status.clientError.unauthorized }
-        );
+    if (!session) {
+      return new Response(JSON.stringify({ message: "Unauthorized", session }), { status: status.clientError.unauthorized });
     }
+
+    const bookmark: Bookmark = await request.json();
 
 
     if (!bookmark || !bookmark.title || !bookmark.url) {
@@ -25,6 +25,8 @@ export async function POST(request: NextRequest) {
         { status: status.clientError.badRequest }
       );
     }
+
+    const userId = session.userId;
 
     const savedBookmark = await BookmarkModel.create({
       ...bookmark,
