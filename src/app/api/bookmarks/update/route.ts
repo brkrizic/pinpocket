@@ -1,5 +1,5 @@
 import connect from "@/lib/db";
-import Bookmark from "@/models/Bookmark";
+import Bookmark from "@/models/Task";
 import { Bookmark as BookmarkType, status } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 

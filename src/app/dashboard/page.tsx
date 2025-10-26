@@ -1,7 +1,7 @@
 "use client";
 
-import BookmarkList from "@/components/dashboard/BookmarkList";
-import CategoryList from "@/components/dashboard/CategoryList";
+import BookmarkList from "@/app/dashboard/projects/BookmarkList";
+import CategoryList from "@/app/dashboard/projects/CategoryList";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import useBookmarkApi from "@/hook/useBookmarkApi";
 import useCategoryApi from "@/hook/useCategoryApi";

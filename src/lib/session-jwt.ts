@@ -1,8 +1,6 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { redis } from "./redis";
-import { v4 as uuid2 } from "uuid";
 
 const secretKey = process.env.SESSION_SECRET!;
 const encodedKey = new TextEncoder().encode(secretKey);

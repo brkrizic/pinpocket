@@ -1,5 +1,5 @@
 import connect from "@/lib/db";
-import Category from "@/models/Category";
+import Category from "@/models/Project";
 import { status } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 

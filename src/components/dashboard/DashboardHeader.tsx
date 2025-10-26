@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 export default function DashboardHeader() {
   const [loading, setLoading] = useState(false);
@@ -9,18 +10,24 @@ export default function DashboardHeader() {
   const onLogout = async () => {
     try {
       setLoading(true);
+
+      // 1️⃣ Call backend logout first
       const response = await fetch("/api/auth/logout", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
 
-      if (response.ok) {
-        console.log("Logged out successfully");
-        window.location.href = "/";
-      } else {
+      if (!response.ok) {
         console.error("Failed to log out");
         setLoading(false);
+        return;
       }
+
+      console.log("Logged out successfully");
+
+      // 2️⃣ Then call NextAuth signOut for OAuth
+      signOut({ redirect: true, callbackUrl: "/" });
+
     } catch (error) {
       console.error("Logout error:", error);
       setLoading(false);

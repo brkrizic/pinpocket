@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BASE_URL } from "@/components/constants/constants";
 import { useLoginApi } from "@/hook/useLoginApi";
+import { signIn } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -64,6 +66,14 @@ export default function LoginForm() {
           {error && <p className="text-red-500">{error}</p>}
           {success && <p className="text-green-500">Login successful!</p>}
         </form>
+        <div className="m-1">
+          <button
+            onClick={() => signIn("google", { prompt: "login" })}
+            className="flex items-center justify-center gap-2 px-5 py-3 border rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 bg-white text-gray-700 font-medium border-gray-300"
+          >
+            <FcGoogle className="w-6 h-6" />
+          </button>
+        </div>
         <div className="mt-6 text-center">
           <Link href="/" className="text-sm font-medium text-blue-600 hover:underline">← Back to Home</Link>
         </div>

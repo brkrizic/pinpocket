@@ -1,4 +1,4 @@
-import { redis } from "./redis";
+import { redis } from "./redisClient";
 import { cookies } from "next/headers";
 import { v4 as uuid } from "uuid";
 

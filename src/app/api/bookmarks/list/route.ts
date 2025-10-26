@@ -1,15 +1,20 @@
 import connect from "@/lib/db";
-import Bookmark from "@/models/Bookmark";
+import { getUserId } from "@/lib/token";
+import Bookmark from "@/models/Task";
 import { status } from "@/types/types";
-import { getUserId } from "@/utils/tokenHelper";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest){
     try {
         await connect();
 
-        const userId = await getUserId(request);
-        const bookmarks = await Bookmark.find({ userId: userId});
+        const { userId, error } = await getUserId();
+
+        if (error || !userId) {
+            return NextResponse.json({ message: error }, { status: status.clientError.unauthorized });
+        }
+
+        const bookmarks = await Bookmark.find({ userId: userId });
 
         if(!bookmarks){
             return NextResponse.json({message: "Bookmarks not found"}, {status: status.clientError.notFound});

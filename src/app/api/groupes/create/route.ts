@@ -1,7 +1,7 @@
 import connect from "@/lib/db";
+import { checkSessionId } from "@/lib/session-redis";
 import Group from "@/models/Group";
 import { Group as GroupType, status } from "@/types/types";
-import { getUserId } from "@/utils/tokenHelper";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest){
     try {
         await connect();
         const group: GroupType = await request.json();
-        const userId = await getUserId(request);
+        const userId = await checkSessionId();
 
         if (!group?.name || typeof group.name !== 'string') {
             return NextResponse.json(
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest){
             { status: status.successful.created }
         );
 
-    } catch (error: any) {
-        return NextResponse.json({error: error.message}, {status: status.serverError.internalServerError})
+    } catch (error: unknown) {
+        return NextResponse.json({error: error}, {status: status.serverError.internalServerError})
     }
 }

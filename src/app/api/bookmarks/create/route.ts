@@ -1,6 +1,6 @@
 import { Bookmark, status, TOKEN_NAME } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
-import BookmarkModel from "@/models/Bookmark";
+import BookmarkModel from "@/models/Task";
 import connect from "@/lib/db";
 import { cookies } from "next/headers";
 import { decrypt } from "@/lib/session-jwt";
