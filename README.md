@@ -7,12 +7,49 @@ This project combines **server-managed sessions** and **stateless JWTs** for a s
 
 ## 🚀 Features
 
-- ✅ **JWT Authentication** – Protects Next.js page routes via middleware.  
-- 🔒 **Redis Sessions** – Stores `sessionId → userId` mappings for API route protection.  
-- ⚡ **Hybrid Auth Model** – Combines frontend JWTs and backend Redis sessions.  
-- 🍪 **Secure Cookies** – `httpOnly`, `secure`, and `SameSite` options enabled.  
-- ⏱️ **Auto Expiration** – Sessions auto-expire in Redis (7 days).  
-- 🔁 **Logout Mechanism** – Clears JWT + removes Redis session.
+1️⃣ Login Flow (Google + Redis)
+
+User clicks Login with Google.
+
+NextAuth handles the OAuth flow:
+
+Gets OAuth access token + refresh token from Google.
+
+NextAuth calls your signIn callback:
+
+You check/create the user in MongoDB.
+
+You call createSession(userId) → stores a refresh token in Redis + generates access token cookie.
+
+Browser now has:
+
+accessToken cookie (JWT) → used for API calls.
+
+refreshToken cookie → used to refresh access token in Redis.
+
+2️⃣ Access Token Refresh
+
+Your backend validates the access token on each request.
+
+When it expires:
+
+Client sends the refresh token cookie to your /api/auth/refresh endpoint.
+
+Backend checks Redis for that refresh token.
+
+If valid → generate new access token, optionally update expiry in Redis.
+
+NextAuth doesn’t interfere here — Redis is authoritative.
+
+3️⃣ Logout
+
+You call your /api/auth/logout endpoint:
+
+Deletes Redis refresh token.
+
+Clears cookies (accessToken, refreshToken).
+
+Optionally call signOut() from NextAuth → invalidates OAuth session.
 
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
