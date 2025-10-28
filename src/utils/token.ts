@@ -2,8 +2,7 @@ import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { v4 as uuid } from "uuid";
-import { redis } from "./redisClient";
-import { status } from "@/types/types";
+import { redis } from "../lib/redisClient";
 
 const secretKey = process.env.SESSION_SECRET!;
 const encodedKey = new TextEncoder().encode(secretKey);

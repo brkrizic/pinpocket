@@ -1,5 +1,5 @@
 import { redis } from "@/lib/redisClient";
-import { createSession } from "@/lib/token";
+import { createSession } from "@/utils/token";
 import User from "@/models/User";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";

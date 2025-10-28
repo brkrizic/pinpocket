@@ -3,7 +3,7 @@ import { status } from "@/types/types";
 import bcrypt from "bcryptjs";
 import connect from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { createSession } from "@/lib/token";
+import { createSession } from "@/utils/token";
 
 export async function POST(request: NextRequest) {
   try {

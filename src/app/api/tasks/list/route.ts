@@ -1,5 +1,5 @@
 import connect from "@/lib/db";
-import { getUserId } from "@/lib/token";
+import { getUserId } from "@/utils/token";
 import Bookmark from "@/models/Task";
 import { status } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";

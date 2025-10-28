@@ -1,24 +1,36 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import BookmarkList from "@/app/dashboard/projects/BookmarkList";
-import CategoryList from "@/app/dashboard/projects/CategoryList";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import useBookmarkApi from "@/hook/useBookmarkApi";
-import useCategoryApi from "@/hook/useCategoryApi";
-import { Bookmark, Category } from "@/types/types";
-import { get } from "http";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { fetchUser } from "../store/userSlice";
+import { useAppDispatch, useAppSelector } from "../store";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
+    const dispatch = useAppDispatch();
+    const { data: user, loading, error } = useAppSelector((state: any) => state.user);
 
+    useEffect(() => {
+        dispatch(fetchUser());
+    }, [dispatch]);
+
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!loading && !user) router.push("/login");
+    }, [loading, user, router]);
+
+    if (loading || !user) {
+        return <div className="flex items-center justify-center h-screen">
+                <p>Loading your dashboard...</p>
+            </div>;
+    }
 
     return (
-        //<div className="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
-        <>
-        <main>
-            <h2 className="text-3xl font-bold mb-6 border-b pb-2">Welcome to Your Dashboard</h2>
-        </main>
-        </>
-        //</div>
+            <main>
+                <h2 className="text-3xl font-bold mb-6 border-b pb-2">
+                    Welcome to Your Dashboard, {user.username} 👋
+                </h2>
+            </main>
     );
 }

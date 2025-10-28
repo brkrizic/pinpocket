@@ -1,32 +1,32 @@
 "use client";
 
-import BookmarkList from "@/app/dashboard/projects/BookmarkList";
-import CategoryList from "@/app/dashboard/projects/CategoryList";
-import useBookmarkApi from "@/hook/useBookmarkApi";
-import useCategoryApi from "@/hook/useCategoryApi";
-import { Bookmark, Category } from "@/types/types";
+import { useGroups } from "@/hook/useGroups";
+import ProjectList from "@/app/dashboard/projects/ProjectList";
+import TaskList from "@/app/dashboard/projects/TaskList";
 import { useEffect, useState } from "react";
+import { ITask } from "@/models/Task";
+import { IProject } from "@/models/Project";
+
 
 
 export default function ProjectsPage(){
-    const [categoryList, setCategoryList] = useState<Category[]>([]);
-    const [bookmarkList, setBookmarkList] = useState<Bookmark[]>([]);
+    const { groups, loading, error } = useGroups();
 
-    const { getAllBookmark } = useBookmarkApi();
-    const { getAllCategories } = useCategoryApi();
+
+    const [selectedProject, setSelectedProject] = useState<string | null>(null);
+    const [tasks, setTasks] = useState<ITask[]>([]);
+
+    // Flatten all projects from all groups into a single array
+    const allProjects = groups.flatMap((group: any) => group.projects || []);
 
     useEffect(() => {
-        const fetch = async () => {
-            const [resultCategory, resultBookmark] = await Promise.all([
-                getAllCategories(),
-                getAllBookmark()
-            ])
-            setBookmarkList(resultBookmark.data);
-            setCategoryList(resultCategory.data);
-        }
+        const project = allProjects.find((p: IProject) => p.id === selectedProject);
+        setTasks(project ? project.tasks : []);
+    }, [allProjects, selectedProject]);
+    
+    if (loading) return <p>Loading groups...</p>;
+    if (error) return <p>Error loading groups: {error.message}</p>;
 
-        fetch();
-    }, []);
 
     return (
         //<div className="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
@@ -46,12 +46,12 @@ export default function ProjectsPage(){
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-white rounded-2xl shadow p-4">
                         <h3 className="font-semibold text-xl mb-3">Projects</h3>
-                        <CategoryList categoryList={categoryList} />
+                        <ProjectList projectList={allProjects} setSelectedProject={setSelectedProject} selectedProject={selectedProject}/>
                     </div>
 
                     <div className="bg-white rounded-2xl shadow p-4 md:col-span-2">
                         <h3 className="font-semibold text-xl mb-3">Tasks</h3>
-                        <BookmarkList bookmarkList={bookmarkList} />
+                        <TaskList taskList={tasks} />
                     </div>
                 </div>
             </div>

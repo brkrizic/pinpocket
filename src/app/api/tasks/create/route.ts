@@ -1,41 +1,38 @@
 import { Bookmark, status, TOKEN_NAME } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
-import BookmarkModel from "@/models/Task";
+import BookmarkModel, { ITask } from "@/models/Task";
 import connect from "@/lib/db";
 import { cookies } from "next/headers";
 import { decrypt } from "@/lib/session-jwt";
+import Task from "@/models/Task";
+import Project from "@/models/Project";
 
 export async function POST(request: NextRequest) {
   try {
     await connect();
 
-    const sessionToken = (await cookies()).get("session")?.value;
-    const session = await decrypt(sessionToken);
-
-    if (!session) {
-      return new Response(JSON.stringify({ message: "Unauthorized", session }), { status: status.clientError.unauthorized });
-    }
-
-    const bookmark: Bookmark = await request.json();
+    const task: ITask = await request.json();
 
 
-    if (!bookmark || !bookmark.title || !bookmark.url) {
+    if (!task || !task.title ) {
       return NextResponse.json(
-        { message: "Bookmark data incomplete." },
+        { message: "Task data incomplete." },
         { status: status.clientError.badRequest }
       );
     }
 
-    const userId = session.userId;
 
-    const savedBookmark = await BookmarkModel.create({
-      ...bookmark,
-      userId,
+    const savedTask = await Task.create({
+      ...task,
       createdAt: new Date(),
     });
 
+    await Project.findByIdAndUpdate(task.projectId, {
+      $push: { tasks: savedTask._id }
+    });
+
     return NextResponse.json(
-      { message: "Bookmark created.", data: savedBookmark },
+      { message: "Task created.", data: savedTask },
       { status: status.successful.created }
     );
 
