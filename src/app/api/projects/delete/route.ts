@@ -23,7 +23,17 @@ export async function DELETE(request: NextRequest){
 
         return NextResponse.json({ success: true, message: "Category deleted"}, {status: status.successful.accepted});
 
-    } catch (error: any) {
-        return NextResponse.json({error: error.message}, {status: status.serverError.internalServerError});
+    } catch (err: unknown) {
+    let message = "Unknown error";
+
+    if (err instanceof Error) {
+      message = err.message;
     }
+
+    return NextResponse.json(
+      { error: message },
+      { status: status.serverError.internalServerError }
+    );
+  }
+
 }

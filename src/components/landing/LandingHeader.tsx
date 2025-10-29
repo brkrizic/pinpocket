@@ -12,3 +12,5 @@ export default function LandingHeader() {
         </header>
     );
 };
+
+export const dynamic = "force-static";

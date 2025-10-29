@@ -1,3 +1,5 @@
+"use client";
+
 import { ITask } from "@/models/Task";
 
 interface taskListProps {

@@ -1,30 +1,16 @@
 import connect from "@/lib/db";
 import User from "@/models/User";
 import { status } from "@/types/types";
-import { getTokenFromHeader, verifyToken } from "@/utils/tokenHelper";
+import { getUserId } from "@/utils/token";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(request: NextRequest) {
   try {
     await connect();
 
-    const token = getTokenFromHeader(request);
-    if (!token) {
-      return NextResponse.json(
-        { message: "Unauthorized: Token missing" },
-        { status: status.clientError.unauthorized }
-      );
-    }
 
-    const decoded = await verifyToken(token).catch(() => null);
-    if (!decoded || !("userId" in decoded)) {
-      return NextResponse.json(
-        { message: "Unauthorized: Invalid token" },
-        { status: status.clientError.unauthorized }
-      );
-    }
 
-    const userId = (decoded as { userId: string }).userId;
+    const userId = await getUserId();
 
     const deletedUser = await User.findByIdAndDelete(userId);
     if (!deletedUser) {

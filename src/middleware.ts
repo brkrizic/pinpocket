@@ -6,19 +6,22 @@ const publicRoutes = ["/login"];
 export default function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
-  const token = req.cookies.get("accessToken")?.value;
+  const accessToken = req.cookies.get("accessToken")?.value;
+  const refreshToken = req.cookies.get("refreshToken")?.value;
 
    // Check if path matches any protected route (supports nested)
   const isProtectedRoute = protectedRoutes.some(route => path === route || path.startsWith(route + "/"));
   const isPublicRoute = publicRoutes.includes(path);;
 
   // Redirect if user is not logged in
-  if (isProtectedRoute && !token) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  if (isProtectedRoute) {
+    if (!accessToken && !refreshToken) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
   }
 
   // Redirect if user is already logged in
-  if (isPublicRoute && token) {
+  if (isPublicRoute && accessToken) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 

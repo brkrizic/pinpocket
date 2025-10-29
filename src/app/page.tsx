@@ -15,3 +15,5 @@ export default function LandingPage() {
         </div>
     );
 }
+
+export const dynamic = "force-static";

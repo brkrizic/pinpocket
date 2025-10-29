@@ -1,15 +1,30 @@
 import api from "@/lib/api";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+}
+
+
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
-  const res = await api.get("/me");
-  if (res.statusText !== "OK") throw new Error("Failed to fetch user");
-  const data = res.data;
-  return data.user;
+    try {
+      const res = await api.get("/me"); // api interceptor will refresh if needed
+      return res.data.user;
+    } catch (err: unknown) {
+      // Narrow unknown type
+      if (err instanceof Error) {
+        throw new Error(err.message); 
+      }
+      
+      // fallback for other shapes
+      throw new Error("Failed to fetch user");
+    }
 });
 
 interface UserState {
-  data: any | null;
+  data: User | null;
   loading: boolean;
   error: string | null;
 }

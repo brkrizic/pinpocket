@@ -1,7 +1,7 @@
 import { redis } from "@/lib/redisClient";
 import { encrypt } from "@/utils/token";
 import { status } from "@/types/types";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { v4 as uuid } from "uuid";
 

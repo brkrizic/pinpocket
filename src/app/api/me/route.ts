@@ -2,10 +2,10 @@ import connect from "@/lib/db";
 import User from "@/models/User";
 import { status } from "@/types/types";
 import { getUserId } from "@/utils/token";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 
-export async function GET(req: NextRequest){
+export async function GET(){
     try {
         await connect();
         const { userId, error } = await getUserId();

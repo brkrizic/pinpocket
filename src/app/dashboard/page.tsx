@@ -1,30 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect } from "react";
-import { fetchUser } from "../store/userSlice";
-import { useAppDispatch, useAppSelector } from "../store";
-import { useRouter } from "next/navigation";
+import { useAppSelector } from "../store";
+
+export const dynamic = "force-dynamic";
 
 export default function DashboardPage() {
-    const dispatch = useAppDispatch();
-    const { data: user, loading, error } = useAppSelector((state: any) => state.user);
-
-    useEffect(() => {
-        dispatch(fetchUser());
-    }, [dispatch]);
-
-    const router = useRouter();
-
-    useEffect(() => {
-        if (!loading && !user) router.push("/login");
-    }, [loading, user, router]);
-
-    if (loading || !user) {
-        return <div className="flex items-center justify-center h-screen">
-                <p>Loading your dashboard...</p>
-            </div>;
-    }
+     const user = useAppSelector((state: any) => state.user.data);
 
     return (
             <main>

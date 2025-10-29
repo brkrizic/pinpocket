@@ -2,9 +2,10 @@ import connect from "@/lib/db";
 import { getUserId } from "@/utils/token";
 import Bookmark from "@/models/Task";
 import { status } from "@/types/types";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { Error } from "mongoose";
 
-export async function GET(request: NextRequest){
+export async function GET(){
     try {
         await connect();
 
@@ -22,7 +23,12 @@ export async function GET(request: NextRequest){
 
         return NextResponse.json({ success: true, data: bookmarks}, { status: status.successful.ok})
 
-    } catch (error: any) {
-        return NextResponse.json({error: error.message}, {status: status.serverError.internalServerError})
+    } catch (err: unknown) {
+        let message = "Unknown error";
+
+        if (err instanceof Error) {
+        message = err.message;
+        }
+        return NextResponse.json({error: message}, {status: status.serverError.internalServerError})
     }
 }

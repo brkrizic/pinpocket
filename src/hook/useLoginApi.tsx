@@ -38,9 +38,13 @@ export function useLoginApi() {
 
       setSuccess(true);
       return data; // contains { success, userId }
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-      return null;
+    } catch (err: unknown) {
+        let message = "Unknown error";
+        if (err instanceof Error) {
+          message = err.message;
+        }
+        setError(message || "Something went wrong");
+        return null;
     } finally {
       setLoading(false);
     }

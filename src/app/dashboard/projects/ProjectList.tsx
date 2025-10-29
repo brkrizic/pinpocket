@@ -1,3 +1,5 @@
+"use client";
+
 import { IProject } from "@/models/Project";
 
 interface ProjectListProps {

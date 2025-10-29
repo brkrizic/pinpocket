@@ -1,11 +1,10 @@
-import { Bookmark, status, TOKEN_NAME } from "@/types/types";
+
 import { NextRequest, NextResponse } from "next/server";
-import BookmarkModel, { ITask } from "@/models/Task";
+import  { ITask } from "@/models/Task";
 import connect from "@/lib/db";
-import { cookies } from "next/headers";
-import { decrypt } from "@/lib/session-jwt";
 import Task from "@/models/Task";
 import Project from "@/models/Project";
+import { status } from "@/types/types";
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,10 +35,17 @@ export async function POST(request: NextRequest) {
       { status: status.successful.created }
     );
 
-  } catch (error: any) {
+  } catch (err: unknown) {
+    let message = "Unknown error";
+
+    if (err instanceof Error) {
+      message = err.message;
+    }
+
     return NextResponse.json(
-      { error: error.message },
+      { error: message },
       { status: status.serverError.internalServerError }
     );
   }
+
 }

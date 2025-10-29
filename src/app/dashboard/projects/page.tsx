@@ -1,13 +1,13 @@
 "use client";
 
-import { useGroups } from "@/hook/useGroups";
 import ProjectList from "@/app/dashboard/projects/ProjectList";
 import TaskList from "@/app/dashboard/projects/TaskList";
 import { useEffect, useState } from "react";
-import { ITask } from "@/models/Task";
 import { IProject } from "@/models/Project";
+import { useGroups } from "@/hook/useGroups";
+import { ITask } from "@/models/Task";
 
-
+export const dynamic = "force-dynamic";
 
 export default function ProjectsPage(){
     const { groups, loading, error } = useGroups();
@@ -17,15 +17,20 @@ export default function ProjectsPage(){
     const [tasks, setTasks] = useState<ITask[]>([]);
 
     // Flatten all projects from all groups into a single array
-    const allProjects = groups.flatMap((group: any) => group.projects || []);
+    const allProjects = groups.flatMap((g) => g.projects ?? []) as IProject[];
 
     useEffect(() => {
-        const project = allProjects.find((p: IProject) => p.id === selectedProject);
-        setTasks(project ? project.tasks : []);
+        if (!selectedProject) return; // nothing selected yet
+        const project = allProjects.find((p) => p.id === selectedProject);
+        if (project?.tasks) {
+            setTasks(project?.tasks as ITask[]);
+        } else {
+            setTasks([]);
+        }
     }, [allProjects, selectedProject]);
     
     if (loading) return <p>Loading groups...</p>;
-    if (error) return <p>Error loading groups: {error.message}</p>;
+    if (error) throw new Error;
 
 
     return (

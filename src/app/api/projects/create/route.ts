@@ -1,9 +1,8 @@
 import connect from "@/lib/db";
 import Group from "@/models/Group";
 import Project from "@/models/Project";
-import Category, { IProject } from "@/models/Project";
-import { Category as CategoryType, status } from "@/types/types";
-import { getUserId } from "@/utils/token";
+import { IProject } from "@/models/Project";
+import { status } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 
 

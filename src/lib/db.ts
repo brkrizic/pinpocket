@@ -12,10 +12,10 @@ if (!MONGODB_URI) {
  * to prevent multiple connections
  */
 
-let cached = (global as any).mongoose;
+let cached = (global).mongoose;
 
 if(!cached){
-    cached = (global as any).mongoose = { conn: null, promise: null};
+    cached = (global).mongoose = { conn: null, promise: null};
 }
 
 async function connect(){

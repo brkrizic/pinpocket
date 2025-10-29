@@ -27,7 +27,17 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, message: "Logged in", user }, { status: status.successful.ok });
 
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: status.serverError.internalServerError });
+  } catch (err: unknown) {
+    let message = "Unknown error";
+
+    if (err instanceof Error) {
+      message = err.message;
+    }
+
+    return NextResponse.json(
+      { error: message },
+      { status: status.serverError.internalServerError }
+    );
   }
+
 }

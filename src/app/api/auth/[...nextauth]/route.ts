@@ -39,10 +39,13 @@ export const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.userId = token.userId; // frontend can read this
-      return session;
-    },
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.userId, // attach custom field
+        },
+      };
+    }
   },
 });
-
-export { handler as GET, handler as POST };

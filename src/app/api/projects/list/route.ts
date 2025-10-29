@@ -1,11 +1,11 @@
 import connect from "@/lib/db";
 import Category from "@/models/Project";
-import { Category as CategoryType, status } from "@/types/types";
+import { status } from "@/types/types";
 import { getUserId } from "@/utils/token";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 
-export async function GET(request: NextRequest){
+export async function GET(){
     try {
         await connect();
         const userId = await getUserId();
@@ -18,7 +18,17 @@ export async function GET(request: NextRequest){
 
 
         return NextResponse.json({success: true, data: categories}, {status: status.successful.ok})
-    } catch (error: any) {
-        return NextResponse.json({error: error.message}, {status: status.serverError.internalServerError});
+    } catch (err: unknown) {
+    let message = "Unknown error";
+
+    if (err instanceof Error) {
+      message = err.message;
     }
+
+    return NextResponse.json(
+      { error: message },
+      { status: status.serverError.internalServerError }
+    );
+  }
+
 }

@@ -44,30 +44,3 @@ export const status = {
 
 export const TOKEN_NAME = 'auth_token';
 
-export type User = {
-    username: string;
-    email: string;
-    password: string;
-}
-
-export type Bookmark = {
-    title: string;
-    url: string;
-    description: string;
-    tags: [string];
-    createdAt: Date;
-    userId: any;
-    categoryId?: any
-}
-
-export type Category = {
-  name: string;
-  userId: any;
-  createdAt: Date;
-}
-
-export type Group = {
-  name: string;
-  userId: any[];
-  createdAt: Date;
-}

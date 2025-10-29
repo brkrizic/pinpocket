@@ -1,11 +1,10 @@
 "use client";
 
-import { GET_USER_GROUPS } from "@/graphql/queries";
 import { useGroups } from "@/hook/useGroups";
-import { useQuery } from "@apollo/client/react";
-
+import { IGroup } from "@/models/Group";
 import Link from "next/link";
-import { useEffect } from "react";
+
+export const dynamic = "force-dynamic";
 
 export default function GroupPage() {
     const { groups, loading, error } = useGroups();
@@ -22,7 +21,7 @@ export default function GroupPage() {
             </button>
         </div>
         <ul className="space-y-4">
-            {groups.map((group: any) => (
+            {groups.map((group: IGroup) => (
             <li
                 key={group.id}
                 className="p-4 rounded-2xl shadow hover:shadow-lg transition bg-white border"

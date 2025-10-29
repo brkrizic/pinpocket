@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BASE_URL } from "@/components/constants/constants";
 import { useLoginApi } from "@/hook/useLoginApi";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
@@ -25,7 +24,7 @@ export default function LoginForm() {
     if(success){
       router.push("/dashboard");
     }
-  }, [success]);
+  }, [success, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
